@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import com.junior.catalogo.dto.ProductDto;
 import com.junior.catalogo.entities.Product;
 import com.junior.catalogo.repository.ProductRepository;
@@ -25,7 +26,7 @@ public class ProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public ProductDto findById(Long id) {
+	public ProductDto findById( Long id) {
 		Optional<Product> product = repository.findById(id);
 		Product entity = product.get();
 		return new ProductDto(entity, entity.getCategory());
