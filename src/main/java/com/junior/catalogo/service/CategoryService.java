@@ -13,17 +13,12 @@ import com.junior.catalogo.dto.CategoryDto;
 import com.junior.catalogo.entities.Category;
 import com.junior.catalogo.repository.CategoryRepository;
 
-
-
-
 @Service
 public class CategoryService {
 
 	@Autowired
 	private CategoryRepository repository;
 	
-	
-
 	@Transactional(readOnly = true)
 	public Page<CategoryDto> findAllPaged(PageRequest pageRequest) {
 		Page<Category> list = repository.findAll(pageRequest);

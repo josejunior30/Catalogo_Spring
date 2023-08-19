@@ -36,14 +36,13 @@ public class Product implements Serializable{
 	@ManyToMany
 	@JoinTable(name="tb_product_category", joinColumns = 
 	@JoinColumn(name="product_id"), inverseJoinColumns = @JoinColumn(name="category_id"))
-	Set<Category>category = new HashSet<>();
+	Set<Category>categories = new HashSet<>();
 	
 	public Product() {
 		
 	}
 
-	public Product(Long id, String name, String description, Double price, String imgUrl, Instant date,
-			Set<Category> category) {
+	public Product(Long id, String name, String description, Double price, String imgUrl, Instant date) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -51,7 +50,7 @@ public class Product implements Serializable{
 		this.price = price;
 		this.imgUrl = imgUrl;
 		this.date = date;
-		this.category = category;
+		
 	}
 
 	public Long getId() {
@@ -102,13 +101,11 @@ public class Product implements Serializable{
 		this.date = date;
 	}
 
-	public Set<Category> getCategory() {
-		return category;
+	public Set<Category> getCategories() {
+		return categories;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+	
 
 	@Override
 	public int hashCode() {

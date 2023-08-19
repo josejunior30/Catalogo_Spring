@@ -9,9 +9,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import com.junior.catalogo.dto.RoleDto;
 import com.junior.catalogo.dto.UserDto;
 import com.junior.catalogo.dto.UserInsertDto;
+
 import com.junior.catalogo.entities.Role;
 import com.junior.catalogo.entities.User;
 import com.junior.catalogo.repository.RoleRepository;
@@ -58,6 +60,20 @@ public class UserService {
 			entity.getRoles().add(role);
 		}
 		
+	}
+	@Transactional(readOnly = true)
+	public UserDto update(Long id, UserDto dto) {
+
+		@SuppressWarnings("deprecation")
+		User entity = repository.getOne(id);
+		entity.setFirstName(dto.getFirstName());
+		repository.save(entity);
+		return new UserDto(entity);
+	}
+
+	public void delete(Long id) {
+
+		repository.deleteById(id);
 	}
 	
 }

@@ -29,7 +29,7 @@ public class ProductService {
 	public ProductDto findById( Long id) {
 		Optional<Product> product = repository.findById(id);
 		Product entity = product.get();
-		return new ProductDto(entity, entity.getCategory());
+		return new ProductDto(entity, entity.getCategories());
 	}
 	@Transactional(readOnly = true)
 	public ProductDto insert(ProductDto dto) {

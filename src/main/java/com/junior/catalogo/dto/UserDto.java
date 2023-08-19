@@ -6,13 +6,18 @@ import java.util.Set;
 
 import com.junior.catalogo.entities.User;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class UserDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+    @NotBlank(message="Campo obrigatorio")
 	private String firstName;
 	private String lastName;
+	@Email(message="colocar em-mail valido")
 	private String email;
 	
 	

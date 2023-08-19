@@ -21,6 +21,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.junior.catalogo.dto.ProductDto;
 import com.junior.catalogo.service.ProductService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(value= "/products")
 public class ProductResource {
@@ -30,7 +32,7 @@ public class ProductResource {
 	public ResponseEntity <Page<ProductDto>> findAll(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
-			@RequestParam(value = "orderBy", defaultValue = "FirstName") String orderBy){
+			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy){
 			PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 			
 		Page<ProductDto> product= service.findAllPaged(pageRequest);
@@ -43,13 +45,13 @@ public class ProductResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ProductDto> insert(@RequestBody ProductDto dto){
+	public ResponseEntity<ProductDto> insert(@Valid @RequestBody ProductDto dto){
 		ProductDto entity = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(entity);
 	}
 	@PutMapping
-	public ResponseEntity<ProductDto> update(@PathVariable Long id, @RequestBody ProductDto dto){
+	public ResponseEntity<ProductDto> update(@Valid @PathVariable Long id, @RequestBody ProductDto dto){
 		ProductDto entity = service.update(id, dto);
 		return ResponseEntity.ok().body(entity);
 	}
