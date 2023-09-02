@@ -5,7 +5,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +24,14 @@ import com.junior.catalogo.repository.RoleRepository;
 import com.junior.catalogo.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService{
 	
 	@Autowired
 	private UserRepository repository; 
 	@Autowired
 	private RoleRepository roleRepository;
 	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	@Transactional(readOnly = true)
 	public Page<UserDto> findAllPaged(PageRequest pageRequest){
@@ -48,7 +52,7 @@ public class UserService {
 		return new UserDto(entity);
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	private void copyDtoToEntity(UserDto dto, User entity) {
 		entity.setFirstName(dto.getFirstName());
 		entity.setEmail(dto.getEmail());
@@ -56,7 +60,7 @@ public class UserService {
 		
 		entity.getRoles().clear();
 		for(RoleDto roleDto: dto.getRoles()) {
-			Role role = roleRepository.getOne(roleDto.getId());
+			Role role = roleRepository.getReferenceById(roleDto.getId());
 			entity.getRoles().add(role);
 		}
 		
@@ -64,8 +68,8 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public UserDto update(Long id, UserDto dto) {
 
-		@SuppressWarnings("deprecation")
-		User entity = repository.getOne(id);
+		
+		User entity = repository.getReferenceById(id);
 		entity.setFirstName(dto.getFirstName());
 		repository.save(entity);
 		return new UserDto(entity);
@@ -74,6 +78,16 @@ public class UserService {
 	public void delete(Long id) {
 
 		repository.deleteById(id);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		
+		User user = repository.findByEmail(username);
+		if(user==null) {
+			throw new  UsernameNotFoundException("Email not found");
+		}
+		return user;
 	}
 	
 }
